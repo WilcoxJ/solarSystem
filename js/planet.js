@@ -374,14 +374,11 @@ var atmosphereControls = new function() {
 var atmosphericGlowControls = new function() {
   this.intensity = 0.94;
   this.fade = 7;
-  this.color = 0x146ebe;
+  this.color = 0xf71a25;
 }
 
 
-
-
-// IDFK why this breaks it.....
-
+// IDK why this breaks it.....
 // guiPlanet.add(planetSelectionControls, 'Planet', ['Earth', 'Mars']).onChange(function(value) {
 // planetChoice = value;
 // });
