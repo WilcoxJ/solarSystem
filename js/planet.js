@@ -1,4 +1,3 @@
-// Scene, Camera, Renderer
 let renderer = new THREE.WebGLRenderer();
 let scene = new THREE.Scene();
 let aspect = window.innerWidth / window.innerHeight;
@@ -7,8 +6,6 @@ let cameraRotation = 0;
 let cameraRotationSpeed = 0.001;
 let cameraAutoRotation = true;
 let orbitControls = new THREE.OrbitControls(camera);
-
-
 
 // Lights
 let spotLight = new THREE.SpotLight(0xffffff, 0.8, 0, 15, 2);
@@ -27,10 +24,6 @@ let planetProto = {
     return sphere;
   },
 
-  // torus: function(size) {
-  //   let torus = ringGeometry
-  // }
-
   material: function(options) {
     let material = new THREE.MeshPhongMaterial();
     if (options) {
@@ -42,7 +35,6 @@ let planetProto = {
     return material;
   },
   glowMaterial: function(intensity, fade, color) {
-    // Custom glow shader from https://github.com/stemkoski/stemkoski.github.com/tree/master/Three.js
     let glowMaterial = new THREE.ShaderMaterial({
       uniforms: { 
         'c': {
@@ -104,15 +96,12 @@ let planetProto = {
 };
 
 let createPlanet = function(options) {
-  // Create the planet's Surface
   let surfaceGeometry = planetProto.sphere(options.surface.size);
   let surfaceMaterial = planetProto.material(options.surface.material);
   let surface = new THREE.Mesh(surfaceGeometry, surfaceMaterial);
 
   // let ringGeometry = planetProto.TorusGeometry( 100, 100, 100, 100 );
 
-  
-  // Create the planet's Atmosphere
   let atmosphereGeometry = planetProto.sphere(options.surface.size + options.atmosphere.size);
   let atmosphereMaterialDefaults = {
     side: THREE.DoubleSide,
@@ -121,13 +110,11 @@ let createPlanet = function(options) {
   let atmosphereMaterialOptions = Object.assign(atmosphereMaterialDefaults, options.atmosphere.material);
   let atmosphereMaterial = planetProto.material(atmosphereMaterialOptions);
   let atmosphere = new THREE.Mesh(atmosphereGeometry, atmosphereMaterial);
-  
-  // Create the planet's Atmospheric glow
+
   let atmosphericGlowGeometry = planetProto.sphere(options.surface.size + options.atmosphere.size + options.atmosphere.glow.size);
   let atmosphericGlowMaterial = planetProto.glowMaterial(options.atmosphere.glow.intensity, options.atmosphere.glow.fade, options.atmosphere.glow.color);
   let atmosphericGlow = new THREE.Mesh(atmosphericGlowGeometry, atmosphericGlowMaterial);
-  
-  // Nest the planet's Surface and Atmosphere into a planet object
+
   let planet = new THREE.Object3D();
   surface.name = 'surface';
   atmosphere.name = 'atmosphere';
@@ -136,7 +123,6 @@ let createPlanet = function(options) {
   planet.add(atmosphere);
   planet.add(atmosphericGlow);
 
-  // Load the Surface's textures
   for (let textureProperty in options.surface.textures) {
     planetProto.texture(
       surfaceMaterial,
@@ -145,7 +131,6 @@ let createPlanet = function(options) {
     ); 
   }
   
-  // Load the Atmosphere's texture
   for (let textureProperty in options.atmosphere.textures) {
     planetProto.texture(
       atmosphereMaterial,
@@ -188,7 +173,6 @@ let earth = createPlanet({
     }
   },
 });
-//1d63ad
 
 let mars = createPlanet({
   surface: {
@@ -210,14 +194,12 @@ let mars = createPlanet({
       opacity: 0.05
     },
     textures: {
-      // map: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/141228/earthcloudmap.jpg',
-      // alphaMap: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/141228/earthcloudmaptrans.jpg'
     },
     glow: {
       size: 0.022,
       intensity: 0.7,
       fade: 7.0,
-      color: 0xf71a25
+      color: 0xa20000
     }
   },
 });
@@ -255,9 +237,6 @@ let saturn = createPlanet({
   },
 });
 
-
-
-
 // Galaxy
 let galaxyGeometry = new THREE.SphereGeometry(1000, 32, 32);
 let galaxyMaterial = new THREE.MeshBasicMaterial({
@@ -275,8 +254,6 @@ textureLoader.load(
   }
 );
 
-
-// Scene, Camera, Renderer Configuration
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
@@ -295,24 +272,17 @@ scene.add(planetSelection);
 
 camera.far = 20000;
 
-// Light Configurations
 spotLight.position.set(3, 5, 5);
 
-// Mesh Configurations
 planetSelection.receiveShadow = true;
 planetSelection.castShadow = true;
 planetSelection.getObjectByName('surface').geometry.center();
 
-
-
-
-// On window resize, adjust camera aspect ratio and renderer size
 window.addEventListener('resize', function() {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
-
 
 // WHEEL
 document.addEventListener('wheel', onDocumentMouseWheel); 
@@ -326,7 +296,6 @@ function onDocumentMouseWheel(event) {
 }
 
 
-// Main render function
 let render = function() {
   planetSelection.getObjectByName('surface').rotation.y += 1/32 * 0.01;
   planetSelection.getObjectByName('atmosphere').rotation.y += 1/16 * 0.009;
@@ -351,7 +320,6 @@ var guiSurface = gui.addFolder('Surface');
 var guiAtmosphere = gui.addFolder('Atmosphere');
 var guiAtmosphericGlow = guiAtmosphere.addFolder('Glow');
 
-// dat.gui controls object
 var cameraControls = new function() {
   this.speed = cameraRotationSpeed;
   this.orbitControls = !cameraAutoRotation;
@@ -364,7 +332,7 @@ var surfaceControls = new function() {
 }
 
 var planetSelectionControls = new function () {
-  this.planetChoice = '';
+  this.selection = 'Mars';
 }
 
 var atmosphereControls = new function() {
@@ -374,14 +342,14 @@ var atmosphereControls = new function() {
 var atmosphericGlowControls = new function() {
   this.intensity = 0.94;
   this.fade = 7;
-  this.color = 0xf71a25;
+  this.color = 0xa20000;
 }
 
-
-// IDK why this breaks it.....
-// guiPlanet.add(planetSelectionControls, 'Planet', ['Earth', 'Mars']).onChange(function(value) {
-// planetChoice = value;
-// });
+// TODO: add more planets....
+guiPlanet.add(planetSelectionControls, 'selection', ['Mars']).onChange(function(value) {
+  selection = value;
+  document.alert(value);
+});
 
 
 guiCamera.add(cameraControls, 'speed', 0, 0.1).step(0.001).onChange(function(value) {
