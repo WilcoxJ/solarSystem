@@ -266,8 +266,13 @@ scene.add(spotLight);
 
 // TODO: add to to GUI 
 var planetSelection = mars;
+// scene.add(planetSelection);
+earth.visible = false;
 
-scene.add(planetSelection);
+scene.add(mars);
+scene.add(earth);
+
+
 
 
 camera.far = 20000;
@@ -345,10 +350,24 @@ var atmosphericGlowControls = new function() {
   this.color = 0xa20000;
 }
 
-// TODO: add more planets....
-guiPlanet.add(planetSelectionControls, 'selection', ['Mars']).onChange(function(value) {
-  selection = value;
-  document.alert(value);
+// TODO: add more planets.... clean this up
+guiPlanet.add(planetSelectionControls, 'selection', ['Mars', 'Earth']).onChange(function(value) {
+  console.log(value);
+  if (value == 'Earth') {
+    planetSelection = earth;
+    earth.visible  = true;
+    mars.visible = false;
+
+  }
+  if (value == 'Mars') {
+    planetSelection = mars;
+    mars.visible = true;
+    earth.visible = false;
+  }
+  // planetSelection.needsUpdate = true;
+  camera.updateProjectionMatrix();
+  render();
+
 });
 
 
