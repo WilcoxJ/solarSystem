@@ -365,8 +365,6 @@ guiPlanet.add(planetSelectionControls, 'selection', ['Mars', 'Earth']).onChange(
     earth.visible = false;
   }
   // planetSelection.needsUpdate = true;
-  camera.updateProjectionMatrix();
-  render();
 
 });
 
