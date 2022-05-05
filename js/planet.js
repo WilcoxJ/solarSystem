@@ -144,7 +144,7 @@ let createPlanet = function(options) {
 
 let earth = createPlanet({
   surface: {
-    size: 0.5,
+    size: 0.6,
     material: {
       bumpScale: 0.04,
       specular: new THREE.Color('grey'),
@@ -176,7 +176,7 @@ let earth = createPlanet({
 
 let mars = createPlanet({
   surface: {
-    size: 0.35,
+    size: 0.4,
     material: {
       bumpScale: 0.04,
       specular: new THREE.Color('grey'),
@@ -205,17 +205,17 @@ let mars = createPlanet({
 });
 
 
-let saturn = createPlanet({
+let moon = createPlanet({
   surface: {
-    size: 0.35,
+    size: 0.14,
     material: {
-      bumpScale: 0.04,
+      bumpScale: 0.025,
       specular: new THREE.Color('grey'),
       shininess: 10
     },
     textures: {
-      map: 'img/saturnmap.jpg',
-      // bumpMap: 'img/marsbump1k.jpg',
+      map: 'img/moon1.jpg',
+      bumpMap: 'img/moonDisplace.jpg',
       // specularMap: 'img/mars_1k_normal.jpg'
     }
   },
@@ -230,9 +230,9 @@ let saturn = createPlanet({
     },
     glow: {
       size: 0.022,
-      intensity: 0.7,
-      fade: 7.0,
-      color: 0xe6eba3
+      intensity: 0.4,
+      fade: 10.0,
+      color: 0xf7f0f0
     }
   },
 });
@@ -271,6 +271,7 @@ earth.visible = false;
 
 scene.add(mars);
 scene.add(earth);
+scene.add(moon);
 
 
 
@@ -351,17 +352,25 @@ var atmosphericGlowControls = new function() {
 }
 
 // TODO: add more planets.... clean this up
-guiPlanet.add(planetSelectionControls, 'selection', ['Mars', 'Earth']).onChange(function(value) {
+guiPlanet.add(planetSelectionControls, 'selection', ['Mars', 'Earth', 'Moon']).onChange(function(value) {
   console.log(value);
   if (value == 'Earth') {
     planetSelection = earth;
     earth.visible  = true;
     mars.visible = false;
+    moon.visible = false;
 
   }
   if (value == 'Mars') {
     planetSelection = mars;
     mars.visible = true;
+    earth.visible = false;
+    moon.visible = false;
+  }
+  if (value == 'Moon') {
+    planetSelection = moon;
+    moon.visible = true;
+    mars.visible = false;
     earth.visible = false;
   }
   // planetSelection.needsUpdate = true;
