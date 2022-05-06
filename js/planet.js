@@ -299,15 +299,16 @@ scene.add(spotLight);
 // TODO: add to to GUI 
 var planetSelection = mars;
 // scene.add(planetSelection);
-earth.visible = false;
 
 scene.add(mars);
 scene.add(earth);
 scene.add(moon);
 scene.add(drewb);
 
-
-
+mars.visible = true;
+moon.visible = false;
+earth.visible = false;
+drewb.visible = false;
 
 camera.far = 20000;
 
