@@ -142,6 +142,38 @@ let createPlanet = function(options) {
   return planet;
 };
 
+let drewb = createPlanet({
+  surface: {
+    size: 0.6,
+    material: {
+      bumpScale: 0.04,
+      specular: new THREE.Color('grey'),
+      shininess: 10
+    },
+    textures: {
+      map: 'img/planet_drewb.jpeg',
+      // bumpMap: 'img/earthbump1k.jpg',
+      // specularMap: 'img/earthmapspecular.jpg'
+    }
+  },
+  atmosphere: {
+    size: 0.003,
+    material: {
+      opacity: 0.8
+    },
+    textures: {
+      // map: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/141228/earthcloudmap.jpg',
+      alphaMap: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/141228/earthcloudmaptrans.jpg'
+    },
+    glow: {
+      size: 0.022,
+      intensity: 0.86,
+      fade: 7.8,
+      color: 0x146ebe
+    }
+  },
+});
+
 let earth = createPlanet({
   surface: {
     size: 0.6,
@@ -272,6 +304,7 @@ earth.visible = false;
 scene.add(mars);
 scene.add(earth);
 scene.add(moon);
+scene.add(drewb);
 
 
 
@@ -352,7 +385,7 @@ var atmosphericGlowControls = new function() {
 }
 
 // TODO: add more planets.... clean this up
-guiPlanet.add(planetSelectionControls, 'selection', ['Mars', 'Earth', 'Moon']).onChange(function(value) {
+guiPlanet.add(planetSelectionControls, 'selection', ['Mars', 'Earth', 'Moon', 'drewb']).onChange(function(value) {
   console.log(value);
   if (value == 'Earth') {
     planetSelection = earth;
