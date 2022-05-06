@@ -144,7 +144,7 @@ let createPlanet = function(options) {
 
 let drewb = createPlanet({
   surface: {
-    size: 0.6,
+    size: 0.7,
     material: {
       bumpScale: 0.04,
       specular: new THREE.Color('grey'),
@@ -392,6 +392,7 @@ guiPlanet.add(planetSelectionControls, 'selection', ['Mars', 'Earth', 'Moon', 'd
     earth.visible  = true;
     mars.visible = false;
     moon.visible = false;
+    drewb.visible = false;
 
   }
   if (value == 'Mars') {
@@ -399,10 +400,19 @@ guiPlanet.add(planetSelectionControls, 'selection', ['Mars', 'Earth', 'Moon', 'd
     mars.visible = true;
     earth.visible = false;
     moon.visible = false;
+    drewb.visible = false;
   }
   if (value == 'Moon') {
     planetSelection = moon;
     moon.visible = true;
+    mars.visible = false;
+    earth.visible = false;
+    drewb.visible = false;
+  }
+   if (value == 'drewb') {
+    planetSelection = drewb;
+    drewb.visible = true;
+    moon.visible = false;
     mars.visible = false;
     earth.visible = false;
   }
