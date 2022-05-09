@@ -199,9 +199,10 @@ let earth = createPlanet({
     },
     glow: {
       size: 0.022,
-      intensity: 0.86,
-      fade: 7.8,
-      color: 0x146ebe
+      intensity: 0.90,
+      fade: 8.4,
+      // color: 0x146ebe
+      color: 0x2ff20
     }
   },
 });
@@ -337,8 +338,15 @@ function onDocumentMouseWheel(event) {
 
 
 let render = function() {
-  planetSelection.getObjectByName('surface').rotation.y += 1/32 * 0.01;
-  planetSelection.getObjectByName('atmosphere').rotation.y += 1/16 * 0.009;
+  if (planetSelection == uranus) {
+    planetSelection.getObjectByName('surface').rotation.x += 1/32 * 0.01;
+    planetSelection.getObjectByName('atmosphere').rotation.x += 1/16 * 0.009;
+  }
+  //venus rotates counter clockwise
+  else {
+    planetSelection.getObjectByName('surface').rotation.y += 1/32 * 0.01;
+    planetSelection.getObjectByName('atmosphere').rotation.y += 1/16 * 0.009;
+  }
   if (cameraAutoRotation) {
     cameraRotation += cameraRotationSpeed;
     camera.position.y = 0;
