@@ -338,7 +338,7 @@ function onDocumentMouseWheel(event) {
 
 
 let render = function() {
-  if (planetSelection == uranus) {
+  if (planetSelection == drewb) {
     planetSelection.getObjectByName('surface').rotation.x += 1/32 * 0.01;
     planetSelection.getObjectByName('atmosphere').rotation.x += 1/16 * 0.009;
   }
