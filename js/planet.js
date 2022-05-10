@@ -1,7 +1,7 @@
 let renderer = new THREE.WebGLRenderer();
 let scene = new THREE.Scene();
 let aspect = window.innerWidth / window.innerHeight;
-let camera = new THREE.PerspectiveCamera(45, aspect, 0.1, 1500);
+let camera = new THREE.PerspectiveCamera(60, aspect, 1, 2500);
 let cameraRotation = 0;
 let cameraRotationSpeed = 0.001;
 let cameraAutoRotation = true;
@@ -159,7 +159,7 @@ let drewb = createPlanet({
   atmosphere: {
     size: 0.003,
     material: {
-      opacity: 0.8
+      opacity: 0.0
     },
     textures: {
       // map: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/141228/earthcloudmap.jpg',
@@ -202,7 +202,8 @@ let earth = createPlanet({
       intensity: 0.90,
       fade: 8.4,
       // color: 0x146ebe
-      color: 0x2ff20
+      // color: 0x2ff20
+      color: 0xc3d2c3
     }
   },
 });
@@ -271,7 +272,7 @@ let moon = createPlanet({
 });
 
 // Galaxy
-let galaxyGeometry = new THREE.SphereGeometry(1000, 32, 32);
+let galaxyGeometry = new THREE.SphereGeometry(2500, 32, 32);
 let galaxyMaterial = new THREE.MeshBasicMaterial({
   side: THREE.BackSide
 });
