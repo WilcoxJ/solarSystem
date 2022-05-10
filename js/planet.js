@@ -167,9 +167,9 @@ let drewb = createPlanet({
     },
     glow: {
       size: 0.022,
-      intensity: 0.86,
-      fade: 7.8,
-      color: 0x146ebe
+      intensity: 0.94,
+      fade: 5.1,
+      color: 0x5fa2
     }
   },
 });
