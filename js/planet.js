@@ -1,7 +1,7 @@
 let renderer = new THREE.WebGLRenderer();
 let scene = new THREE.Scene();
 let aspect = window.innerWidth / window.innerHeight;
-let camera = new THREE.PerspectiveCamera(60, aspect, 1, 2500);
+let camera = new THREE.PerspectiveCamera(60, aspect, 1, 2800);
 let cameraRotation = 0;
 let cameraRotationSpeed = 0.001;
 let cameraAutoRotation = true;
@@ -33,6 +33,20 @@ let planetProto = {
     }
     
     return material;
+  },
+
+  ring: function (val) {
+    console.log(val);
+    if(val == true) {
+      let ring = new THREE.TorusGeometry( 0.92, 0.07, 2, 100 );
+
+      //TODO: pass planet as val to determine ring
+      // let ring = new THREE.TorusKnotGeometry( 0.8, 0.01, 187, 10, 20, 20 );
+
+      ring.rotateX( (Math.PI / 2) * .98 );
+      return ring;
+    }
+
   },
   glowMaterial: function(intensity, fade, color) {
     let glowMaterial = new THREE.ShaderMaterial({
@@ -97,10 +111,15 @@ let planetProto = {
 
 let createPlanet = function(options) {
   let surfaceGeometry = planetProto.sphere(options.surface.size);
+
+  let ringGeometry = planetProto.ring(options.ring.val);
+
   let surfaceMaterial = planetProto.material(options.surface.material);
   let surface = new THREE.Mesh(surfaceGeometry, surfaceMaterial);
 
-  // let ringGeometry = planetProto.TorusGeometry( 100, 100, 100, 100 );
+// TODO Fix ring material
+  let ringMaterial = planetProto.material(options.surface.material);
+  let ringSurface = new THREE.Mesh(ringGeometry, surfaceMaterial);
 
   let atmosphereGeometry = planetProto.sphere(options.surface.size + options.atmosphere.size);
   let atmosphereMaterialDefaults = {
@@ -115,6 +134,8 @@ let createPlanet = function(options) {
   let atmosphericGlowMaterial = planetProto.glowMaterial(options.atmosphere.glow.intensity, options.atmosphere.glow.fade, options.atmosphere.glow.color);
   let atmosphericGlow = new THREE.Mesh(atmosphericGlowGeometry, atmosphericGlowMaterial);
 
+
+
   let planet = new THREE.Object3D();
   surface.name = 'surface';
   atmosphere.name = 'atmosphere';
@@ -122,6 +143,8 @@ let createPlanet = function(options) {
   planet.add(surface);
   planet.add(atmosphere);
   planet.add(atmosphericGlow);
+  planet.add(ringMaterial);
+  planet.add(ringSurface);
 
   for (let textureProperty in options.surface.textures) {
     planetProto.texture(
@@ -144,7 +167,7 @@ let createPlanet = function(options) {
 
 let drewb = createPlanet({
   surface: {
-    size: 0.7,
+    size: 0.65,
     material: {
       bumpScale: 0.04,
       specular: new THREE.Color('grey'),
@@ -155,6 +178,9 @@ let drewb = createPlanet({
       // bumpMap: 'img/earthbump1k.jpg',
       // specularMap: 'img/earthmapspecular.jpg'
     }
+  },
+  ring: {
+    val: true
   },
   atmosphere: {
     size: 0.003,
@@ -187,6 +213,10 @@ let earth = createPlanet({
       bumpMap: 'img/earthbump1k.jpg',
       specularMap: 'img/earthmapspecular.jpg'
     }
+  },
+
+  ring: {
+    val: false
   },
   atmosphere: {
     size: 0.003,
@@ -222,6 +252,47 @@ let mars = createPlanet({
       specularMap: 'img/mars_1k_normal.jpg'
     }
   },
+
+  ring: {
+    val: false
+  },
+
+  atmosphere: {
+    size: 0.003,
+    material: {
+      opacity: 0.05
+    },
+    textures: {
+    },
+    glow: {
+      size: 0.022,
+      intensity: 0.7,
+      fade: 7.0,
+      color: 0xa20000
+    }
+  },
+});
+
+let saturn = createPlanet({
+  surface: {
+    size: 1,
+    material: {
+      bumpScale: 0.04,
+      specular: new THREE.Color('grey'),
+      shininess: 10
+    },
+    textures: {
+      map: 'img/saturnmap.jpg',
+      ringMap: 'img/rings.jpg'
+      // bumpMap: 'img/marsbump1k.jpg',
+      // specularMap: 'img/mars_1k_normal.jpg'
+    }
+  },
+
+  ring: {
+    val: false
+  },
+
   atmosphere: {
     size: 0.003,
     material: {
@@ -253,6 +324,11 @@ let moon = createPlanet({
       // specularMap: 'img/mars_1k_normal.jpg'
     }
   },
+
+  ring: {
+    val: false
+  },
+
   atmosphere: {
     size: 0.003,
     material: {
@@ -288,6 +364,8 @@ textureLoader.load(
   }
 );
 
+
+
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
@@ -305,11 +383,13 @@ var planetSelection = mars;
 scene.add(mars);
 scene.add(earth);
 scene.add(moon);
+scene.add(saturn);
 scene.add(drewb);
 
 mars.visible = true;
 moon.visible = false;
 earth.visible = false;
+saturn.visible = false;
 drewb.visible = false;
 
 camera.far = 20000;
@@ -330,7 +410,7 @@ window.addEventListener('resize', function() {
 document.addEventListener('wheel', onDocumentMouseWheel); 
 function onDocumentMouseWheel(event) {
   var fovMAX = 100;
-  var fovMIN = 25;
+  var fovMIN = 45;
   camera.fov -= event.wheelDeltaY * 0.01;
   camera.fov = Math.max( Math.min( camera.fov, fovMAX ), fovMIN );
   camera.updateProjectionMatrix();
@@ -347,13 +427,14 @@ let render = function() {
   else {
     planetSelection.getObjectByName('surface').rotation.y += 1/32 * 0.01;
     planetSelection.getObjectByName('atmosphere').rotation.y += 1/16 * 0.009;
+    // planetSelection.getObjectByName('ring').rotation.y += 90;
   }
   if (cameraAutoRotation) {
     cameraRotation += cameraRotationSpeed;
     camera.position.y = 0;
     camera.position.x = 2 * Math.sin(cameraRotation);
     camera.position.z = 2 * Math.cos(cameraRotation);
-    camera.lookAt(earth.position);
+    camera.lookAt(planetSelection.position);
   }
   requestAnimationFrame(render);
   renderer.render(scene, camera);
@@ -395,7 +476,7 @@ var atmosphericGlowControls = new function() {
 }
 
 // TODO: add more planets.... clean this up
-guiPlanet.add(planetSelectionControls, 'selection', ['Mars', 'Earth', 'Moon', 'drewb']).onChange(function(value) {
+guiPlanet.add(planetSelectionControls, 'selection', ['Mars', 'Earth', 'Moon', 'Saturn', 'drewb']).onChange(function(value) {
   console.log(value);
   if (value == 'Earth') {
     planetSelection = earth;
@@ -403,6 +484,7 @@ guiPlanet.add(planetSelectionControls, 'selection', ['Mars', 'Earth', 'Moon', 'd
     mars.visible = false;
     moon.visible = false;
     drewb.visible = false;
+    saturn.visible = false;
 
   }
   if (value == 'Mars') {
@@ -411,6 +493,15 @@ guiPlanet.add(planetSelectionControls, 'selection', ['Mars', 'Earth', 'Moon', 'd
     earth.visible = false;
     moon.visible = false;
     drewb.visible = false;
+    saturn.visible = false;
+  }
+  if (value == 'Saturn') {
+    planetSelection = saturn;
+    saturn.visible = true;
+    moon.visible = false;
+    mars.visible = false;
+    earth.visible = false;
+    drewb.visible = false;
   }
   if (value == 'Moon') {
     planetSelection = moon;
@@ -418,6 +509,7 @@ guiPlanet.add(planetSelectionControls, 'selection', ['Mars', 'Earth', 'Moon', 'd
     mars.visible = false;
     earth.visible = false;
     drewb.visible = false;
+    saturn.visible = false;
   }
    if (value == 'drewb') {
     planetSelection = drewb;
@@ -425,6 +517,7 @@ guiPlanet.add(planetSelectionControls, 'selection', ['Mars', 'Earth', 'Moon', 'd
     moon.visible = false;
     mars.visible = false;
     earth.visible = false;
+    saturn.visible = false;
   }
   // planetSelection.needsUpdate = true;
 
@@ -463,9 +556,4 @@ guiAtmosphericGlow.add(atmosphericGlowControls, 'fade', 0, 50).onChange(function
 guiAtmosphericGlow.addColor(atmosphericGlowControls, 'color').onChange(function(value) {
   planetSelection.getObjectByName('atmosphericGlow').material.uniforms.glowColor.value.setHex(value);
 });
-
-
-
-
-
 
