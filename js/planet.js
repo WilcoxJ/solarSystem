@@ -38,7 +38,7 @@ let planetProto = {
   ring: function (val) {
     console.log(val);
     if(val == true) {
-      let ring = new THREE.TorusGeometry( 0.98, 0.09, 2, 100 );
+      let ring = new THREE.TorusGeometry( 0.95, 0.04, 2, 100 );
 
       //TODO: pass planet as val to determine ring
       // let ring = new THREE.TorusKnotGeometry( 0.8, 0.01, 187, 10, 20, 20 );
@@ -275,7 +275,7 @@ let mars = createPlanet({
 
 let saturn = createPlanet({
   surface: {
-    size: 0.7,
+    size: 0.72,
     material: {
       bumpScale: 0.04,
       specular: new THREE.Color('grey'),
