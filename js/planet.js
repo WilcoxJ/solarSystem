@@ -38,7 +38,7 @@ let planetProto = {
   ring: function (val) {
     console.log(val);
     if(val == true) {
-      let ring = new THREE.TorusGeometry( 0.92, 0.07, 2, 100 );
+      let ring = new THREE.TorusGeometry( 0.98, 0.09, 2, 100 );
 
       //TODO: pass planet as val to determine ring
       // let ring = new THREE.TorusKnotGeometry( 0.8, 0.01, 187, 10, 20, 20 );
@@ -233,7 +233,7 @@ let earth = createPlanet({
       fade: 8.4,
       // color: 0x146ebe
       // color: 0x2ff20
-      color: 0xc3d2c3
+      color: 0xa272
     }
   },
 });
@@ -275,7 +275,7 @@ let mars = createPlanet({
 
 let saturn = createPlanet({
   surface: {
-    size: 1,
+    size: 0.7,
     material: {
       bumpScale: 0.04,
       specular: new THREE.Color('grey'),
@@ -290,7 +290,7 @@ let saturn = createPlanet({
   },
 
   ring: {
-    val: false
+    val: true
   },
 
   atmosphere: {
@@ -302,9 +302,9 @@ let saturn = createPlanet({
     },
     glow: {
       size: 0.022,
-      intensity: 0.7,
-      fade: 7.0,
-      color: 0xa20000
+      intensity: 0.93,
+      fade: 7.3,
+      color: 0xd9f071
     }
   },
 });
@@ -384,7 +384,7 @@ scene.add(mars);
 scene.add(earth);
 scene.add(moon);
 scene.add(saturn);
-scene.add(drewb);
+// scene.add(drewb);
 
 mars.visible = true;
 moon.visible = false;
@@ -476,14 +476,14 @@ var atmosphericGlowControls = new function() {
 }
 
 // TODO: add more planets.... clean this up
-guiPlanet.add(planetSelectionControls, 'selection', ['Mars', 'Earth', 'Moon', 'Saturn', 'drewb']).onChange(function(value) {
+guiPlanet.add(planetSelectionControls, 'selection', ['Mars', 'Earth', 'Moon', 'Saturn']).onChange(function(value) {
   console.log(value);
   if (value == 'Earth') {
     planetSelection = earth;
     earth.visible  = true;
     mars.visible = false;
     moon.visible = false;
-    drewb.visible = false;
+    // drewb.visible = false;
     saturn.visible = false;
 
   }
@@ -492,7 +492,7 @@ guiPlanet.add(planetSelectionControls, 'selection', ['Mars', 'Earth', 'Moon', 'S
     mars.visible = true;
     earth.visible = false;
     moon.visible = false;
-    drewb.visible = false;
+    // drewb.visible = false;
     saturn.visible = false;
   }
   if (value == 'Saturn') {
@@ -501,24 +501,24 @@ guiPlanet.add(planetSelectionControls, 'selection', ['Mars', 'Earth', 'Moon', 'S
     moon.visible = false;
     mars.visible = false;
     earth.visible = false;
-    drewb.visible = false;
+    // drewb.visible = false;
   }
   if (value == 'Moon') {
     planetSelection = moon;
     moon.visible = true;
     mars.visible = false;
     earth.visible = false;
-    drewb.visible = false;
+    // drewb.visible = false;
     saturn.visible = false;
   }
-   if (value == 'drewb') {
-    planetSelection = drewb;
-    drewb.visible = true;
-    moon.visible = false;
-    mars.visible = false;
-    earth.visible = false;
-    saturn.visible = false;
-  }
+  //  if (value == 'drewb') {
+  //   planetSelection = drewb;
+  //   // drewb.visible = true;
+  //   moon.visible = false;
+  //   mars.visible = false;
+  //   earth.visible = false;
+  //   saturn.visible = false;
+  // }
   // planetSelection.needsUpdate = true;
 
 });
