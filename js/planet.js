@@ -38,7 +38,7 @@ let planetProto = {
   ring: function (val) {
     console.log(val);
     if(val == true) {
-      let ring = new THREE.TorusGeometry( 0.95, 0.04, 2, 100 );
+      let ring = new THREE.TorusGeometry( 0.97, 0.04, 2, 100 );
 
       // TODO: make better rings
       // let ring = new THREE.RingGeometry(0.95, 0.90, 30, 1);
@@ -351,7 +351,7 @@ let mars = createPlanet({
 
 let saturn = createPlanet({
   surface: {
-    size: 0.72,
+    size: 0.77,
     material: {
       bumpScale: 0.04,
       specular: new THREE.Color('grey'),
@@ -423,6 +423,43 @@ let moon = createPlanet({
   },
 });
 
+
+let jupiter = createPlanet({
+  surface: {
+    size: 0.75,
+    material: {
+      bumpScale: 0.04,
+      specular: new THREE.Color('grey'),
+      shininess: 10
+    },
+    textures: {
+      map: 'img/jupiter.jpg'
+      // ringMap: 'img/saturnringcolor.jpg'
+      // bumpMap: 'img/marsbump1k.jpg',
+      // specularMap: 'img/mars_1k_normal.jpg'
+    }
+  },
+
+  ring: {
+    val: false
+  },
+
+  atmosphere: {
+    size: 0.003,
+    material: {
+      opacity: 0.05
+    },
+    textures: {
+    },
+    glow: {
+      size: 0.022,
+      intensity: 0.93,
+      fade: 7.3,
+      color: 0xa8b74e
+    }
+  },
+});
+
 // Galaxy
 let galaxyGeometry = new THREE.SphereGeometry(2500, 32, 32);
 let galaxyMaterial = new THREE.MeshBasicMaterial({
@@ -462,6 +499,7 @@ scene.add(moon);
 scene.add(saturn);
 scene.add(mercury);
 scene.add(venus);
+scene.add(jupiter);
 
 mercury.visible = true;
 moon.visible = false;
@@ -469,6 +507,7 @@ earth.visible = false;
 saturn.visible = false;
 mars.visible = false;
 venus.visible = false;
+jupiter.visible = false;
 camera.far = 20000;
 
 spotLight.position.set(3, 5, 5);
@@ -498,7 +537,7 @@ function onDocumentMouseWheel(event) {
 let render = function() {
   //venus rotates counter clockwise
   if (planetSelection == venus) {
-    planetSelection.getObjectByName('surface').rotation.y += (1/32 * -0.02);
+    planetSelection.getObjectByName('surface').rotation.y += (1/32 * -0.015);
     planetSelection.getObjectByName('atmosphere').rotation.y += (1/16 * -0.009);
   }
   //polar orbit
@@ -560,7 +599,7 @@ var planetGlowControls = new function() {
 }
 
 // TODO: add more planets.... clean this up
-guiPlanet.add(planetSelectionControls, 'selection', ['Mercury', 'Venus', 'Earth', 'Moon', 'Mars', 'Saturn']).onChange(function(value) {
+guiPlanet.add(planetSelectionControls, 'selection', ['Mercury', 'Venus', 'Earth', 'Moon', 'Mars', 'Jupiter', 'Saturn']).onChange(function(value) {
   console.log(value);
   if (value == 'Earth') {
     planetSelection = earth;
@@ -569,6 +608,7 @@ guiPlanet.add(planetSelectionControls, 'selection', ['Mercury', 'Venus', 'Earth'
     moon.visible = false;
     mercury.visible = false;
     saturn.visible = false;
+    jupiter.visible = false;
     venus.visible = false;
     document.getElementById('planetTitle').innerHTML = 'Earth';
     document.getElementById('planetStats').innerHTML = 'Radius: 6378.1 KM</br>Distance From Sun: 1 AU</br>Type: Terrestrial Planet</br>Moons: 1'
@@ -581,6 +621,7 @@ guiPlanet.add(planetSelectionControls, 'selection', ['Mercury', 'Venus', 'Earth'
     moon.visible = false;
     mercury.visible = false;
     saturn.visible = false;
+    jupiter.visible = false;
     venus.visible = false;
     document.getElementById('planetTitle').innerHTML = 'Mars';
     document.getElementById('planetStats').innerHTML = 'Radius: 3396.2 KM</br>Distance From Sun: 1.5 AU</br>Type: Terrestrial Planet'
@@ -592,6 +633,7 @@ guiPlanet.add(planetSelectionControls, 'selection', ['Mercury', 'Venus', 'Earth'
     mars.visible = false;
     earth.visible = false;
     mercury.visible = false;
+    jupiter.visible = false;
     venus.visible = false;
     document.getElementById('planetTitle').innerHTML = 'Saturn';
     document.getElementById('planetStats').innerHTML = 'Radius: 60268.0 KM</br>Distance From Sun: 9.5 AU</br>Type: Jovian Planet</br>Moons: 62'
@@ -604,6 +646,7 @@ guiPlanet.add(planetSelectionControls, 'selection', ['Mercury', 'Venus', 'Earth'
     earth.visible = false;
     mercury.visible = false;
     saturn.visible = false;
+    jupiter.visible = false;
     venus.visible = false;
     document.getElementById('planetTitle').innerHTML = 'Moon';
     document.getElementById('planetStats').innerHTML = 'Radius: 1738.1 KM</br>Distance From Sun: ~1 AU</br>Type: Major Moon'
@@ -616,6 +659,7 @@ guiPlanet.add(planetSelectionControls, 'selection', ['Mercury', 'Venus', 'Earth'
     earth.visible = false;
     saturn.visible = false;
     venus.visible = false;
+    jupiter.visible = false;
     document.getElementById('planetTitle').innerHTML = 'Mercury';
     document.getElementById('planetStats').innerHTML = 'Radius: 2439.4 KM</br>Distance From Sun: 0.4 AU</br>Type: Terrestrial Planet'
   }
@@ -626,11 +670,23 @@ guiPlanet.add(planetSelectionControls, 'selection', ['Mercury', 'Venus', 'Earth'
     mars.visible = false;
     earth.visible = false;
     saturn.visible = false;
+    jupiter.visible = false;
     mercury.visible = false;
     document.getElementById('planetTitle').innerHTML = 'Venus';
     document.getElementById('planetStats').innerHTML = 'Radius: 6051.8.4 KM</br>Distance From Sun: 0.7 AU</br>Type: Terrestrial Planet'
   }
-  // planetSelection.needsUpdate = true;
+  if (value == 'Jupiter') {
+    planetSelection = jupiter;
+    jupiter.visible = true;
+    moon.visible = false;
+    mars.visible = false;
+    earth.visible = false;
+    saturn.visible = false;
+    mercury.visible = false;
+    venus.visible = false;
+    document.getElementById('planetTitle').innerHTML = 'Jupiter';
+    document.getElementById('planetStats').innerHTML = 'Radius: 71492.0 KM</br>Distance From Sun: 5.2 AU</br>Type: Jovian Planet</br>Moons: 79'
+  }
 
 });
 
