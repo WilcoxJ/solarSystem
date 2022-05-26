@@ -3,7 +3,7 @@ let scene = new THREE.Scene();
 let aspect = window.innerWidth / window.innerHeight;
 let camera = new THREE.PerspectiveCamera(60, aspect, 1, 2800);
 let cameraRotation = 0;
-let cameraRotationSpeed = 0.001;
+let cameraRotationSpeed = 0.0005;
 let cameraAutoRotation = true;
 let orbitControls = new THREE.OrbitControls(camera);
 
@@ -202,6 +202,80 @@ let drewb = createPlanet({
   },
 });
 
+
+let mercury = createPlanet({
+  surface: {
+    size: 0.35,
+    material: {
+      bumpScale: 0.005,
+      specular: new THREE.Color('grey'),
+      shininess: 10
+    },
+    textures: {
+      map: 'img/mercuryTexture2.jpg',
+      bumpMap: 'img/mercurybump.jpg'
+      // specularMap: 'img/mars_1k_normal.jpg'
+    }
+  },
+
+  ring: {
+    val: false
+  },
+
+  atmosphere: {
+    size: 0.003,
+    material: {
+      opacity: 0.05
+    },
+    textures: {
+    },
+    glow: {
+      size: 0.022,
+      intensity: 0.7,
+      fade: 7.0,
+      color: 0x7f3333
+    }
+  },
+});
+
+// "C:\xampp2\htdocs\solarSystem\img\ven0aaa2.jpg"
+
+let venus = createPlanet({
+  surface: {
+    size: 0.57,
+    material: {
+      bumpScale: 0.005,
+      specular: new THREE.Color('grey'),
+      shininess: 10
+    },
+    textures: {
+      map: 'img/ven0aaa2.jpg'
+      // bumpMap: 'img/mercurybump.jpg'
+      // specularMap: 'img/mars_1k_normal.jpg'
+    }
+  },
+
+  ring: {
+    val: false
+  },
+
+  atmosphere: {
+    size: 0.003,
+    material: {
+      opacity: 0.05
+    },
+    textures: {
+    },
+    glow: {
+      size: 0.022,
+      intensity: 0.7,
+      fade: 7.0,
+      color: 0xedba7a
+    }
+  },
+});
+
+
 let earth = createPlanet({
   surface: {
     size: 0.6,
@@ -242,7 +316,7 @@ let earth = createPlanet({
 
 let mars = createPlanet({
   surface: {
-    size: 0.4,
+    size: 0.39,
     material: {
       bumpScale: 0.04,
       specular: new THREE.Color('grey'),
@@ -379,21 +453,22 @@ scene.add(spotLight);
 // scene.add(light);
 
 // TODO: add to to GUI 
-var planetSelection = mars;
+var planetSelection = mercury;
 // scene.add(planetSelection);
 
 scene.add(mars);
 scene.add(earth);
 scene.add(moon);
 scene.add(saturn);
-// scene.add(drewb);
+scene.add(mercury);
+scene.add(venus);
 
-mars.visible = true;
+mercury.visible = true;
 moon.visible = false;
 earth.visible = false;
 saturn.visible = false;
-drewb.visible = false;
-
+mars.visible = false;
+venus.visible = false;
 camera.far = 20000;
 
 spotLight.position.set(3, 5, 5);
@@ -412,8 +487,8 @@ window.addEventListener('resize', function() {
 document.addEventListener('wheel', onDocumentMouseWheel); 
 function onDocumentMouseWheel(event) {
   var fovMAX = 100;
-  var fovMIN = 45;
-  camera.fov -= event.wheelDeltaY * 0.01;
+  var fovMIN = 40;
+  camera.fov -= event.wheelDeltaY * 0.005;
   camera.fov = Math.max( Math.min( camera.fov, fovMAX ), fovMIN );
   camera.updateProjectionMatrix();
 
@@ -421,11 +496,17 @@ function onDocumentMouseWheel(event) {
 
 
 let render = function() {
+  //venus rotates counter clockwise
+  if (planetSelection == venus) {
+    planetSelection.getObjectByName('surface').rotation.y += (1/32 * -0.02);
+    planetSelection.getObjectByName('atmosphere').rotation.y += (1/16 * -0.009);
+  }
+  //polar orbit
   if (planetSelection == drewb) {
     planetSelection.getObjectByName('surface').rotation.x += 1/32 * 0.01;
     planetSelection.getObjectByName('atmosphere').rotation.x += 1/16 * 0.009;
   }
-  //venus rotates counter clockwise
+  
   else {
     planetSelection.getObjectByName('surface').rotation.y += 1/32 * 0.01;
     planetSelection.getObjectByName('atmosphere').rotation.y += 1/16 * 0.009;
@@ -447,10 +528,11 @@ render();
 // dat.gui
 var gui = new dat.GUI();
 var guiPlanet = gui.addFolder('Planet');
+var guiPlanetGlow = gui.addFolder('Glow');
 var guiCamera = gui.addFolder('Camera');
 var guiSurface = gui.addFolder('Surface');
 var guiAtmosphere = gui.addFolder('Atmosphere');
-var guiAtmosphericGlow = guiAtmosphere.addFolder('Glow');
+
 
 var cameraControls = new function() {
   this.speed = cameraRotationSpeed;
@@ -464,29 +546,31 @@ var surfaceControls = new function() {
 }
 
 var planetSelectionControls = new function () {
-  this.selection = 'Mars';
+  this.selection = 'Mercury';
 }
 
 var atmosphereControls = new function() {
   this.opacity = 0.8;
 }
 
-var atmosphericGlowControls = new function() {
+var planetGlowControls = new function() {
   this.intensity = 0.94;
   this.fade = 7;
-  this.color = 0xa20000;
+  this.color = 0x7f3333;
 }
 
 // TODO: add more planets.... clean this up
-guiPlanet.add(planetSelectionControls, 'selection', ['Mars', 'Earth', 'Moon', 'Saturn']).onChange(function(value) {
+guiPlanet.add(planetSelectionControls, 'selection', ['Mercury', 'Venus', 'Earth', 'Moon', 'Mars', 'Saturn']).onChange(function(value) {
+  orbitControls.enabled = false;
   console.log(value);
   if (value == 'Earth') {
     planetSelection = earth;
     earth.visible  = true;
     mars.visible = false;
     moon.visible = false;
-    // drewb.visible = false;
+    mercury.visible = false;
     saturn.visible = false;
+    venus.visible = false;
 
   }
   if (value == 'Mars') {
@@ -494,8 +578,9 @@ guiPlanet.add(planetSelectionControls, 'selection', ['Mars', 'Earth', 'Moon', 'S
     mars.visible = true;
     earth.visible = false;
     moon.visible = false;
-    // drewb.visible = false;
+    mercury.visible = false;
     saturn.visible = false;
+    venus.visible = false;
   }
   if (value == 'Saturn') {
     planetSelection = saturn;
@@ -503,27 +588,53 @@ guiPlanet.add(planetSelectionControls, 'selection', ['Mars', 'Earth', 'Moon', 'S
     moon.visible = false;
     mars.visible = false;
     earth.visible = false;
-    // drewb.visible = false;
+    mercury.visible = false;
+    venus.visible = false;
+
+
   }
   if (value == 'Moon') {
     planetSelection = moon;
     moon.visible = true;
     mars.visible = false;
     earth.visible = false;
-    // drewb.visible = false;
+    mercury.visible = false;
     saturn.visible = false;
+    venus.visible = false;
   }
-  //  if (value == 'drewb') {
-  //   planetSelection = drewb;
-  //   // drewb.visible = true;
-  //   moon.visible = false;
-  //   mars.visible = false;
-  //   earth.visible = false;
-  //   saturn.visible = false;
-  // }
+   if (value == 'Mercury') {
+    planetSelection = mercury;
+    mercury.visible = true;
+    moon.visible = false;
+    mars.visible = false;
+    earth.visible = false;
+    saturn.visible = false;
+    venus.visible = false;
+  }
+  if (value == 'Venus') {
+    planetSelection = venus;
+    venus.visible = true;
+    moon.visible = false;
+    mars.visible = false;
+    earth.visible = false;
+    saturn.visible = false;
+    mercury.visible = false;
+  }
   // planetSelection.needsUpdate = true;
 
 });
+
+
+guiPlanetGlow.addColor(planetGlowControls, 'color').onChange(function(value) {
+  planetSelection.getObjectByName('atmosphericGlow').material.uniforms.glowColor.value.setHex(value);
+});
+guiPlanetGlow.add(planetGlowControls, 'intensity', 0, 1).onChange(function(value) {
+  planetSelection.getObjectByName('atmosphericGlow').material.uniforms['c'].value = value;
+});
+guiPlanetGlow.add(planetGlowControls, 'fade', 0, 50).onChange(function(value) {
+  planetSelection.getObjectByName('atmosphericGlow').material.uniforms['p'].value = value;
+});
+
 
 
 guiCamera.add(cameraControls, 'speed', 0, 0.1).step(0.001).onChange(function(value) {
@@ -549,13 +660,6 @@ guiAtmosphere.add(atmosphereControls, 'opacity', 0, 1).onChange(function(value) 
   planetSelection.getObjectByName('atmosphere').material.opacity = value;
 });
 
-guiAtmosphericGlow.add(atmosphericGlowControls, 'intensity', 0, 1).onChange(function(value) {
-  planetSelection.getObjectByName('atmosphericGlow').material.uniforms['c'].value = value;
-});
-guiAtmosphericGlow.add(atmosphericGlowControls, 'fade', 0, 50).onChange(function(value) {
-  planetSelection.getObjectByName('atmosphericGlow').material.uniforms['p'].value = value;
-});
-guiAtmosphericGlow.addColor(atmosphericGlowControls, 'color').onChange(function(value) {
-  planetSelection.getObjectByName('atmosphericGlow').material.uniforms.glowColor.value.setHex(value);
-});
+
+
 
