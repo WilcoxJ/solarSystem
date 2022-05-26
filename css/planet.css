@@ -26,11 +26,13 @@ body {
 	left: 0;
 	outline: none;
 }
-/* 
+
 .dataCard {
-	margin-right: 40%;
-	margin-top: 45%;
-} */
+	position: fixed;
+	padding: 3%;
+	left:0px;
+	bottom:0px;
+} 
 
 .container {
 	position: absolute;
