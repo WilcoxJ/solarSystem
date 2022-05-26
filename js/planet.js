@@ -561,7 +561,6 @@ var planetGlowControls = new function() {
 
 // TODO: add more planets.... clean this up
 guiPlanet.add(planetSelectionControls, 'selection', ['Mercury', 'Venus', 'Earth', 'Moon', 'Mars', 'Saturn']).onChange(function(value) {
-  orbitControls.enabled = false;
   console.log(value);
   if (value == 'Earth') {
     planetSelection = earth;
@@ -571,6 +570,8 @@ guiPlanet.add(planetSelectionControls, 'selection', ['Mercury', 'Venus', 'Earth'
     mercury.visible = false;
     saturn.visible = false;
     venus.visible = false;
+    document.getElementById('planetTitle').innerHTML = 'Earth';
+    document.getElementById('planetStats').innerHTML = 'Radius: 6378.1 KM</br>Distance From Sun: 1 AU</br>Type: Terrestrial Planet</br>Moons: 1'
 
   }
   if (value == 'Mars') {
@@ -581,6 +582,8 @@ guiPlanet.add(planetSelectionControls, 'selection', ['Mercury', 'Venus', 'Earth'
     mercury.visible = false;
     saturn.visible = false;
     venus.visible = false;
+    document.getElementById('planetTitle').innerHTML = 'Mars';
+    document.getElementById('planetStats').innerHTML = 'Radius: 3396.2 KM</br>Distance From Sun: 1.5 AU</br>Type: Terrestrial Planet'
   }
   if (value == 'Saturn') {
     planetSelection = saturn;
@@ -590,7 +593,8 @@ guiPlanet.add(planetSelectionControls, 'selection', ['Mercury', 'Venus', 'Earth'
     earth.visible = false;
     mercury.visible = false;
     venus.visible = false;
-
+    document.getElementById('planetTitle').innerHTML = 'Saturn';
+    document.getElementById('planetStats').innerHTML = 'Radius: 60268.0 KM</br>Distance From Sun: 9.5 AU</br>Type: Jovian Planet</br>Moons: 62'
 
   }
   if (value == 'Moon') {
@@ -601,6 +605,8 @@ guiPlanet.add(planetSelectionControls, 'selection', ['Mercury', 'Venus', 'Earth'
     mercury.visible = false;
     saturn.visible = false;
     venus.visible = false;
+    document.getElementById('planetTitle').innerHTML = 'Moon';
+    document.getElementById('planetStats').innerHTML = 'Radius: 1738.1 KM</br>Distance From Sun: ~1 AU</br>Type: Major Moon'
   }
    if (value == 'Mercury') {
     planetSelection = mercury;
@@ -610,6 +616,8 @@ guiPlanet.add(planetSelectionControls, 'selection', ['Mercury', 'Venus', 'Earth'
     earth.visible = false;
     saturn.visible = false;
     venus.visible = false;
+    document.getElementById('planetTitle').innerHTML = 'Mercury';
+    document.getElementById('planetStats').innerHTML = 'Radius: 2439.4 KM</br>Distance From Sun: 0.4 AU</br>Type: Terrestrial Planet'
   }
   if (value == 'Venus') {
     planetSelection = venus;
@@ -619,6 +627,8 @@ guiPlanet.add(planetSelectionControls, 'selection', ['Mercury', 'Venus', 'Earth'
     earth.visible = false;
     saturn.visible = false;
     mercury.visible = false;
+    document.getElementById('planetTitle').innerHTML = 'Venus';
+    document.getElementById('planetStats').innerHTML = 'Radius: 6051.8.4 KM</br>Distance From Sun: 0.7 AU</br>Type: Terrestrial Planet'
   }
   // planetSelection.needsUpdate = true;
 

@@ -4,7 +4,8 @@
 	<head>
 		<meta charset="utf-8">
 		<title>Planet</title>
-        <link rel="stylesheet" type="text/css" href="css/planet.css"/>
+        <link href="css/planet.css" rel="stylesheet" type="text/css"/>
+		<link href="css/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 		<link href="img/favicon.ico" rel="icon">
 		<link href="img/apple-touch-icon.png" rel="apple-touch-icon">
 	</head>
@@ -15,7 +16,19 @@
 	<script src="js/OrbitControls.js"></script>
 	<script src="js/math.js"></script>
     <script src="js/planet.js" type="module"></script>
-	
+	<div class="container">
+		<div class="dataCard">
+			<div class="card text-white bg-dark bg-transparent mb-3" style="max-width: 18rem;">
+				<div class="card-body">
+			  		<h5 class="card-title" id="planetTitle">Mercury</h5>
+			  		<p class="card-text font-monospace" id="planetStats">Radius: 2439.4 KM</br>Distance From Sun: 0.4 AU</br>Type: Terrestrial Planet</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
 
 	</body>
 </html>
