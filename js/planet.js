@@ -40,8 +40,9 @@ let planetProto = {
     if(val == true) {
       let ring = new THREE.TorusGeometry( 0.95, 0.04, 2, 100 );
 
-      //TODO: pass planet as val to determine ring
-      // let ring = new THREE.TorusKnotGeometry( 0.8, 0.01, 187, 10, 20, 20 );
+      // TODO: make better rings
+      // let ring = new THREE.RingGeometry(0.95, 0.90, 30, 1);
+
 
       ring.rotateX( (Math.PI / 2) * .98 );
       return ring;
@@ -140,10 +141,11 @@ let createPlanet = function(options) {
   surface.name = 'surface';
   atmosphere.name = 'atmosphere';
   atmosphericGlow.name = 'atmosphericGlow';
+  ringSurface.name = 'ringSurface';
   planet.add(surface);
   planet.add(atmosphere);
   planet.add(atmosphericGlow);
-  planet.add(ringMaterial);
+  // planet.add(ringMaterial);
   planet.add(ringSurface);
 
   for (let textureProperty in options.surface.textures) {
@@ -282,8 +284,8 @@ let saturn = createPlanet({
       shininess: 10
     },
     textures: {
-      map: 'img/saturnmap.jpg',
-      ringMap: 'img/rings.jpg'
+      map: 'img/saturnmap.jpg'
+      // ringMap: 'img/saturnringcolor.jpg'
       // bumpMap: 'img/marsbump1k.jpg',
       // specularMap: 'img/mars_1k_normal.jpg'
     }
@@ -357,7 +359,7 @@ let galaxy = new THREE.Mesh(galaxyGeometry, galaxyMaterial);
 // Load Galaxy Textures
 textureLoader.crossOrigin = true;
 textureLoader.load(
-'img/starfield4.png',
+'img/milkyway.jpg',
   function(texture) {
     galaxyMaterial.map = texture;
     scene.add(galaxy);
